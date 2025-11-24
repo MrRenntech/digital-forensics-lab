@@ -1,0 +1,40 @@
+openapi: 3.0.3
+info:
+  title: Forensics Forge API
+  version: 0.1.0
+paths:
+  /tools/upload:
+    post:
+      summary: Upload an evidence file
+      parameters:
+        - name: api_key
+          in: query
+          required: true
+          schema: {type: string}
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: job info
+  /tools/tsk/{jobId}/fls:
+    post:
+      summary: Run fls (SleuthKit) against uploaded image
+      parameters:
+        - name: api_key
+          in: query
+          required: true
+          schema: {type: string}
+        - name: jobId
+          in: path
+          required: true
+          schema: {type: string}
+      responses:
+        '200':
+          description: command output

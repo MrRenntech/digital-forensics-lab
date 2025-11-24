@@ -1,0 +1,19 @@
+﻿services:
+  cyberchef:
+    image: nginx:stable
+    volumes:
+      - ./tools/cyberchef/build:/usr/share/nginx/html:ro
+    ports:
+      - "8081:80"
+    restart: unless-stopped
+
+  forge-runner:
+    build: ./tools/forge-runner
+    container_name: forge-runner
+    volumes:
+      - ./jobs:/jobs
+    env_file:
+      - .env
+    ports:
+      - "5000:5000"
+    restart: unless-stopped

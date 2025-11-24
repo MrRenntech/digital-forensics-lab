@@ -1,0 +1,31 @@
+# make a backup of the original
+Copy-Item docker-compose.forensics.yml docker-compose.forensics.yml.bak -Force
+
+# overwrite with a minimal compose that removes tsk-cli and version line
+@"
+services:
+  cyberchef:
+    image: nginx:stable
+    volumes:
+      - ./tools/cyberchef/build:/usr/share/nginx/html:ro
+    ports:
+      - "8081:80"
+    restart: unless-stopped
+
+  forge-runner:
+    build: ./tools/forge-runner
+    container_name: forge-runner
+    volumes:
+      - ./jobs:/jobs
+    environment:
+      - JOB_STORAGE=/jobs
+      - FORGE_API_KEY=changeme
+    ports:
+      - "5000:5000"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1024M
+"@ | Set-Content docker-compose.forensics.yml -Encoding UTF8
